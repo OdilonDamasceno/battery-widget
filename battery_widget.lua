@@ -31,7 +31,10 @@ local function worker(args)
 
     function battery_image:setImagePercentage(number)
         local percent = tonumber(number)
-        if percent == nil then percent = 50 end
+        if percent == nil then
+            battery_image:setPercentage()
+            return 0
+        end
         if percent ~= -1 then
             text.text = percent .. "% "
         else
