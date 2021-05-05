@@ -8,6 +8,9 @@ local battery_image = {}
 local text = {}
 
 local function worker(args)
+    local args = args or {}
+    local show_percentage = false or args.show_percentage
+
     battery_image = wibox.widget {
         forced_width = 18,
         forced_height = 25,
@@ -16,7 +19,11 @@ local function worker(args)
         widget = wibox.widget.imagebox
     }
 
-    text = wibox.widget {widget = wibox.widget.textbox}
+    if show_percentage then
+        text = wibox.widget {widget = wibox.widget.textbox}
+    else
+        text = wibox.widget {}
+    end
 
     widget = wibox.widget {
         wibox.widget {
@@ -41,7 +48,7 @@ local function worker(args)
             awful.spawn.easy_async_with_shell(
                 "cat /sys/class/power_supply/BAT0/capacity",
                 function(out)
-                    text.text = out:gsub("\n", "") .. "%+ "
+                    text.text = out:gsub("\n", "") .. "% "
                 end)
         end
         if percent == 100 then
